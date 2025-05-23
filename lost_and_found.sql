@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2025 at 05:04 PM
+-- Generation Time: May 23, 2025 at 10:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -116,7 +116,13 @@ INSERT INTO `activity_log` (`id`, `message`, `date`, `status`) VALUES
 (75, 'admin: Robert Pradilla | LOGIN', '2025-05-21 11:23:37 PM', 'login'),
 (76, 'admin: Robert Pradilla | LOGOUT', '2025-05-21 23:53:48', 'logout'),
 (77, 'admin: Robert Pradilla | LOGIN', '2025-05-21 11:53:52 PM', 'login'),
-(78, 'admin: Robert Pradilla | LOGIN', '2025-05-22 10:38:42 PM', 'login');
+(78, 'admin: Robert Pradilla | LOGIN', '2025-05-22 10:38:42 PM', 'login'),
+(79, 'admin: Robert Pradilla | LOGIN', '2025-05-23 03:19:17 PM', 'login'),
+(80, 'admin: Robert Pradilla | LOGIN', '2025-05-23 04:52:57 PM', 'login'),
+(81, 'admin: Robert Pradilla | LOGOUT', '2025-05-23 16:56:50', 'logout'),
+(82, 'admin: Robert Pradilla | LOGIN', '2025-05-23 05:07:13 PM', 'login'),
+(83, 'admin: Robert Pradilla | LOGOUT', '2025-05-23 18:39:27', 'logout'),
+(84, 'admin: Robert Pradilla | LOGIN', '2025-05-23 06:47:52 PM', 'login');
 
 -- --------------------------------------------------------
 
@@ -132,21 +138,19 @@ CREATE TABLE `claims` (
   `description` text DEFAULT NULL,
   `last_seen` varchar(255) DEFAULT NULL,
   `date_lost` date DEFAULT NULL,
-  `claim_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `claim_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(255) DEFAULT 'pending',
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `claims`
 --
 
-INSERT INTO `claims` (`id`, `item_id`, `student_staff_id`, `name`, `description`, `last_seen`, `date_lost`, `claim_date`) VALUES
-(9, 8, 's230112413', 'Jan Dhenniel Maniflor', 'yung wallpaper is yung personal pic ko tas yung pass is 123123 try nyo open', 'sa canteen', '2025-05-15', '2025-05-18 13:20:44'),
-(10, 8, '123', 'bert', '31', 'ewan', '0000-00-00', '2025-05-21 12:42:00'),
-(11, 8, '123', 'bert', '31', 'ewan', '0000-00-00', '2025-05-21 12:42:20'),
-(12, 8, '123', 'bert', 'ewan', 'ewan', '0000-00-00', '2025-05-21 13:00:04'),
-(15, 8, '123', '123', '123', '123', '2025-05-22', '2025-05-21 14:53:53'),
-(16, 10, '213', 'bert', '12312', 'ewan', '2025-05-01', '2025-05-21 14:58:38'),
-(17, 10, 'aha1', '23', '321', '321', '2025-05-02', '2025-05-21 14:59:20');
+INSERT INTO `claims` (`id`, `item_id`, `student_staff_id`, `name`, `description`, `last_seen`, `date_lost`, `claim_date`, `status`, `user_id`) VALUES
+(16, 10, '213', 'bert', '12312', 'ewan', '2025-05-01', '2025-05-21 14:58:38', 'pending', NULL),
+(17, 10, 'aha1', '23', '321', '321', '2025-05-02', '2025-05-21 14:59:20', 'pending', NULL),
+(18, 10, 'test', '123', '321', '123', '2025-05-14', '2025-05-23 07:22:26', 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -183,17 +187,24 @@ CREATE TABLE `found_items` (
   `item_category` varchar(255) NOT NULL,
   `item_name` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `status` varchar(20) NOT NULL DEFAULT 'unclaimed'
+  `status` varchar(20) NOT NULL DEFAULT 'unclaimed',
+  `item_description` text DEFAULT NULL,
+  `date_surrendered` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `found_items`
 --
 
-INSERT INTO `found_items` (`id`, `item_category`, `item_name`, `image`, `status`) VALUES
-(8, 'wallets21312', 'wallets', 'wallet.jpg', 'claimed'),
-(10, 'test', '123', 'rm logo 5 copy.png', 'claimed'),
-(13, 'tesa', '123', 'peakpx.jpg', 'unclaimed');
+INSERT INTO `found_items` (`id`, `item_category`, `item_name`, `image`, `status`, `item_description`, `date_surrendered`) VALUES
+(10, 'test', '123', 'rm logo 5 copy.png', 'claimed', NULL, NULL),
+(13, 'tesa', '123', 'peakpx.jpg', 'unclaimed', NULL, NULL),
+(15, 'Electronics', 'a', '473186305_649419480770490_7087258612620437740_n.jpg', 'unclaimed', '123', '2025-05-08'),
+(16, 'Books', 'Networking books', '485967711_510553715227404_6202152729805320321_n.jpg', 'unclaimed', 'may name sa likod ng front page \r\nName: Robert Pradilla', '2025-05-23'),
+(17, 'school supply', 'ballpend', 'braso.jpg', 'unclaimed', 'may name sa loob', '2025-05-23'),
+(18, 'school supply', 'ballpend', 'braso.jpg', 'unclaimed', 'may name sa loob', '2025-05-23'),
+(19, 'school supply', 'ballpend', 'braso.jpg', 'unclaimed', 'may name sa loob', '2025-05-23'),
+(20, 'school supply', 'ballpend', 'braso.jpg', 'unclaimed', 'may name sa loob', '2025-05-23');
 
 -- --------------------------------------------------------
 
@@ -219,15 +230,30 @@ INSERT INTO `posts` (`post_id`, `username`, `post_content`, `created_at`, `image
 (153, 'maniflor', 'test', '2025-05-13 10:52:10', NULL, 3),
 (154, 'maniflor', 'ID ko nawawala baka may nakapulot\r\n\r\nName: Robert Pradilla\r\n', '2025-05-13 10:52:47', NULL, 3),
 (155, 'robertpradilla', 'nawawalang posa huhutes', '2025-05-13 10:53:26', 'posa.jpeg', 4),
-(173, 'admin', 'announcement\r\n', '2025-05-13 11:25:55', NULL, 1),
 (174, 'admin', 'test', '2025-05-13 11:26:15', NULL, 1),
 (178, 'robertpradilla', 'test', '2025-05-22 14:11:37', NULL, 4),
 (185, 'robertpradilla', 'ha', '2025-05-22 14:28:50', NULL, 4),
-(186, 'robertpradilla', 'a', '2025-05-22 14:28:55', NULL, 4),
-(187, 'robertpradilla', '1', '2025-05-22 14:31:20', NULL, 4),
 (188, 'robertpradilla', 'ha', '2025-05-22 14:31:39', NULL, 4),
-(189, 'robertpradilla', 'ha', '2025-05-22 14:31:46', NULL, 4),
-(190, 'robertpradilla', 'ha', '2025-05-22 14:32:58', NULL, 4);
+(190, 'robertpradilla', 'ha', '2025-05-22 14:32:58', NULL, 4),
+(191, 'admin', 'aa', '2025-05-23 07:32:00', '477f8ccd-86f2-46de-b758-b5bdcf3c0dc6.jpg', 1),
+(192, 'admin', 'aw', '2025-05-23 07:32:10', NULL, 1),
+(193, 'robertpradilla', 'arawk ko po\n', '2025-05-23 08:06:43', NULL, 4),
+(195, 'robertpradilla', 'localhost//123', '2025-05-23 12:24:09', NULL, 4),
+(196, 'robertpradilla', 'muscle', '2025-05-23 15:37:02', 'braso.jpg', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_comments`
+--
+
+CREATE TABLE `post_comments` (
+  `comment_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `comment_content` text NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -292,6 +318,12 @@ ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`);
 
 --
+-- Indexes for table `post_comments`
+--
+ALTER TABLE `post_comments`
+  ADD PRIMARY KEY (`comment_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -305,13 +337,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `claims`
 --
 ALTER TABLE `claims`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `found`
@@ -323,13 +355,19 @@ ALTER TABLE `found`
 -- AUTO_INCREMENT for table `found_items`
 --
 ALTER TABLE `found_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
+
+--
+-- AUTO_INCREMENT for table `post_comments`
+--
+ALTER TABLE `post_comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
